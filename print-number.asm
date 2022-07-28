@@ -7,7 +7,7 @@ main:
     mov sp, bp
     
     mov cx, 0 ; set the digit counter to 0
-    mov ax, 0xffff ; number to be printed
+    mov ax, 125 ; number to be printed
 
     call print_number
     jmp exit
