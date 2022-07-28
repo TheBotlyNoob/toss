@@ -3,7 +3,7 @@
 %define bufLen 10
 
 buf:
-    times 10 db 0
+    times bufLen db 0
 
 
 mov bx, buf
