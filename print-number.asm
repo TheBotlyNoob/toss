@@ -6,61 +6,42 @@ main:
     mov bp, 0x8000
     mov sp, bp
     
-    mov cx, 0 ; set the digit counter to 0
-    mov ax, 125 ; number to be printed
+    mov ax, 12333 ; number to be printed
 
-    call print_number
-    jmp exit
+    jmp print_number
 
 ; print the number in `ax` as a decimal number
 print_number:
-    mov bx, 10 ; set divisor to 10
+    mov bx, 10 ; set the divisor to 10
 
-    mov dx, 0 ; reset the quotient
-    div bx ; ax / bx = dx ; ax % bx = ax
+    mov dx, 0 ; we need this why?
+    div bx ; divide `ax` number by 10
+    ; ax = quotient, dx = remainder
 
     push dx ; push the remainder to the stack
-    inc cx ; increment the digit counter
 
-    cmp ax, 0 ; check if the remainder is zero
-    je print_number_end ; if so, print the number and return
-    jmp print_number ; if not, loop
+    cmp ax, 0 ; check if the quotient is 0 
+    je print_number_end
+    jmp print_number
 
 print_number_end:
-    pop ax ; pop the remainder from the stack
-    dec cx ; decrement the counter
+    ; print the number in the stack as a decimal number
+    pop ax
+    add al, '0' ; turn the number to ASCII
 
-    add al, '0' ; make it an ASCII character
-    push cx ; prevent the counter from being overwritten
-    call print_char
-    pop cx ; restore the counter
-    cmp cx, 0 ; check if the counter is 0
-    jne print_number_end ; loop if it is not
-
-    ; if it is, print a newline and return
-    call newline
-    ret
-
-newline:
-    pusha
-    mov al, `\r`
-    call print_char
-    mov al, `\n`
-    call print_char
-    popa
-    ret
-
-print_char:
-    pusha
     mov ah, 0x0e
-    int 0x10
-    popa
-    ret
+    int 0x10 ; print the number
 
-; halt the OS and CPU
-exit:
-    hlt
-    jmp exit
+    cmp sp, bp ; check if the stack is empty
+    ; if it's not, loop
+    jne print_number_end
+    ; if it is, print a newline and exit
+    mov al, `\r`
+    int 0x10
+    mov al, `\n`
+    int 0x10
+    jmp $
+
 
 times 510 - ($ - $$) db 0 ; finish the boot sector
 db 0x55, 0xaa

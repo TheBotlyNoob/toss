@@ -1,0 +1,13 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run in QEMU",
+            "type": "shell",
+            "command": "nasm ${file} -o os;qemu-system-x86_64 -nodefaults -boot order=c -vga std -drive file=os,format=raw,index=0,media=disk",
+            "problemMatcher": []
+        }
+    ]
+}
