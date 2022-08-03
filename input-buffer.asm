@@ -1,37 +1,45 @@
+
 [org 0x7c00]
 
 %define bufLen 10
-
 buf:
     times bufLen db 0
 
-
 mov bx, buf
 
+; entrypoint of the OS
 main:
     mov ah, 0x00
     int 0x16
-    mov [bx], al ; move char to buffer
-    inc bx ; increment buffer pointer
-    
-    cmp bx, buf + bufLen ; check if buffer is full
-    je done
+    mov ah, 0x00e
+    int 0x10
+
+    mov [bx], al
+    inc bx
+
+    cmp bx, buf + bufLen
+    je print_buf
+
     jmp main
 
-done:
-    sub bx, bufLen + 1
-    mov cl, bufLen
+print_buf:
+    mov bx, buf
+    mov ah, 0x00e
 
-
-l1:
-    inc bx
-    
-    mov ah, 0x0e
-    mov al, [bx]
+    ; newline
+    mov al, `\r`
     int 0x10
-    
-    dec cl
-    jnz l1
+    mov al, `\n`
+    int 0x10
 
-times 510 - ($ - $$) db 0
+    l:
+        mov al, [bx]
+        int 0x10
+        inc bx
+
+        cmp bx, buf + bufLen
+        jne l
+
+; finish the boot sector
+times 510 - ($ - $$) db 0x00
 db 0x55, 0xaa

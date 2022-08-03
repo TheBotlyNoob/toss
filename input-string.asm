@@ -1,8 +1,12 @@
 [org 0x7c00]
 
+; entrypoint of the OS
 main:
+    ; initialize the stack
     mov bp, 0x8000
     mov sp, bp
+
+    mov cx, 0
     
     mov ah, 0x00
     int 0x16
@@ -11,6 +15,7 @@ main:
     mov ah, 0x00e
     int 0x10
     push ax
+    inc cx
     jmp main
 
 on_newline:
@@ -20,9 +25,10 @@ on_newline:
 
 print_stack:
     pop ax
+    dec cx
     mov ah, 0x00e
     int 0x10
-    cmp sp, bp
+    cmp cx, 0
     jne print_stack
     ret
 
@@ -36,5 +42,6 @@ newline:
     popa
     ret
 
-times 510 - ($ - $$) db 0
+; finish the boot sector
+times 510 - ($ - $$) db 0x00
 db 0x55, 0xaa
