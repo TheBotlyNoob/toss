@@ -1,11 +1,11 @@
 [org 0x7c00]
 
+; initialize the stack
+mov bp, 0x8000
+mov sp, bp
+
 ; entrypoint of the OS
 main:
-    ; initialize the stack
-    mov bp, 0x8000
-    mov sp, bp
-    
     jmp $
 
 ; finish the boot sector

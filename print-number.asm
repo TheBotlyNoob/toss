@@ -1,13 +1,13 @@
 [org 0x7c00]
 
+; initialize the stack pointer
+mov bp, 0x8000
+mov sp, bp
+
+mov cx, 0
+
 ; entrypoint of the OS
 main:
-    mov cx, 0
-
-    ; initialize the stack pointer
-    mov bp, 0x8000
-    mov sp, bp
-    
     mov ax, 12333 ; number to be printed
 
 ; print the number in `ax` as a decimal number
@@ -24,8 +24,9 @@ print_number:
     je print_number_end
     jmp print_number
 
+
+; print the number in the stack as a decimal number
 print_number_end:
-    ; print the number in the stack as a decimal number
     pop ax
     add al, '0' ; turn the number to ASCII
 
