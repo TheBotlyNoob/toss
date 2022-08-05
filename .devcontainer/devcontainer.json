@@ -1,0 +1,10 @@
+{
+    "features": {
+        "desktop-lite": {
+            // defaults
+            "password": "vscode",
+            "webPort": "6080",
+            "vncPort": "5901"
+        }
+    }
+}
