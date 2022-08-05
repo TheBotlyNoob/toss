@@ -23,7 +23,7 @@ print_number:
     cmp ax, 0 ; check if the quotient is 0 
     je print_number_end
     jmp print_number
-
+ 
 
 ; print the number in the stack as a decimal number
 print_number_end:

@@ -1,11 +1,10 @@
 
 [org 0x7c00]
 
-%define bufLen 10
-buf:
-    times bufLen db 0
+BUF_LEN equ 10
+BUF: times BUF_LEN db 0
 
-mov bx, buf
+mov bx, BUF
 
 ; entrypoint of the OS
 main:
@@ -17,13 +16,14 @@ main:
     mov [bx], al
     inc bx
 
-    cmp bx, buf + bufLen
+    cmp bx, BUF + BUF_LEN
     je print_buf
 
     jmp main
 
 print_buf:
-    mov bx, buf
+    inc 
+    mov bx, BUF
     mov ah, 0x00e
 
     ; newline
@@ -37,7 +37,7 @@ print_buf:
         int 0x10
         inc bx
 
-        cmp bx, buf + bufLen
+        cmp bx, BUF + BUF_LEN
         jne l
         jmp $
 
