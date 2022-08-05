@@ -2,7 +2,7 @@
 [org 0x7c00]
 
 BUF_LEN equ 10
-BUF: times BUF_LEN db 0
+BUF: times BUF_LEN db 0x00
 
 mov bx, BUF
 
@@ -42,5 +42,5 @@ print_buf:
         jmp $
 
 ; finish the boot sector
-times 510 - ($ - $$) db 0
+times 510 - ($ - $$) db 0x00
 db 0x55, 0xaa

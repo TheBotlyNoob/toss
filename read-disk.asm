@@ -55,17 +55,17 @@ print_string:
         after_l:
             ret
 
-BOOT_DISK: db 0
+BOOT_DISK: db 0x00
 
 ERROR_MESSAGE:
     db "unknown error reading disk.", 0
 
 ; finish the boot sector
-times 510 - ($ - $$) db 0
+times 510 - ($ - $$) db 0x00
 db 0x55, 0xaa
 
 AFTER_BOOT_SECTOR:
     db "Hello, World!"
 
     ; finish the sector
-    times 512 - ($ - AFTER_BOOT_SECTOR) db 0
+    times 512 - ($ - AFTER_BOOT_SECTOR) db 0x00

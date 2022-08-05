@@ -9,5 +9,5 @@ main:
     jmp $
 
 ; finish the boot sector
-times 510 - ($ - $$) db 0
+times 510 - ($ - $$) db 0x00
 db 0x55, 0xaa
