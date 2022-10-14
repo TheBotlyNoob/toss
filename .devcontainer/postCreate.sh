@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# install nasm and qemu
-
+# General installs
 sudo apt update
+sudo apt install -y qemu qemu-system build-essential
 
-sudo apt install -y nasm qemu qemu-system
+# Now do stuff branch-specific
+sudo apt install -y nasm
