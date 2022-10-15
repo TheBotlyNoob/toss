@@ -1,10 +1,11 @@
 {
     "features": {
-        "desktop-lite": {
+        "ghcr.io/devcontainers/features/desktop-lite:1": {
             // defaults
             "password": "vscode",
             "webPort": "6080",
             "vncPort": "5901"
         }
-    }
+    },
+    "postCreateCommand": "bash .devcontainer/postCreate.sh"
 }
