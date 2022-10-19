@@ -1,0 +1,3 @@
+ENTRY(_start)
+OUTPUT_ARCH(i686:x86-64)
+OUTPUT_FORMAT(binary)

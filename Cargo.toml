@@ -1,0 +1,12 @@
+[workspace]
+members = ["kernel", "qemu"]
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+opt-level = 3
+strip = true
