@@ -1,5 +1,5 @@
 [workspace]
-members = ["kernel", "qemu"]
+members = ["boot", "qemu"]
 
 [profile.dev]
 panic = "abort"

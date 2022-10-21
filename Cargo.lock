@@ -7,6 +7,12 @@ name = "kernel"
 version = "0.1.0"
 
 [[package]]
+name = "llvm-tools"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "955be5d0ca0465caf127165acb47964f911e2bc26073e865deb8be7189302faf"
+
+[[package]]
 name = "ovmf-prebuilt"
 version = "0.1.0-alpha.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -17,5 +23,6 @@ name = "qemu"
 version = "0.1.0"
 dependencies = [
  "kernel",
+ "llvm-tools",
  "ovmf-prebuilt",
 ]

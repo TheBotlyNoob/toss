@@ -8,4 +8,7 @@ default-run = "qemu"
 
 [dependencies]
 ovmf-prebuilt = "0.1.0-alpha.1"
-kernel = { path = "../kernel", artifact = "bin", target = "os-target.json" }
+
+[build-dependencies]
+llvm-tools = "0.1"
+kernel = { path = "../boot", artifact = "bin", target = "x86_64-unknown-none" }

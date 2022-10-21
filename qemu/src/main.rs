@@ -1,7 +1,7 @@
 use std::process::{Command, Stdio};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    println!("Kernel file: {}", env!("CARGO_BIN_FILE_kernel"));
+    println!("Kernel file: {}", env!("KERNEL_BINARY_PATH"));
 
     let mut cmd = Command::new("qemu-system-x86_64");
     cmd.stdout(Stdio::inherit())
@@ -14,7 +14,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Use a modern machine.
     cmd.args(["-machine", "q35"]);
-    // Multi-processor services protocol test needs exactly 4 CPUs.
     cmd.args(["-smp", "4"]);
     // Allocate some memory.
     cmd.args(["-m", "256M"]);
@@ -32,7 +31,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     cmd.args(["-serial", "stdio"]);
     cmd.arg("-drive").arg(format!(
         "format=raw,index=0,media=disk,file={}",
-        env!("CARGO_BIN_FILE_kernel")
+        env!("KERNEL_BINARY_PATH")
     ));
 
     cmd.spawn()?.wait()?;
