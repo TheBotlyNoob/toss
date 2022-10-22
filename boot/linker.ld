@@ -1,3 +1,5 @@
+/* taken from https://github.com/rust-osdev/bootloader */
+
 ENTRY(_start)
 
 /* FIXME: use this linker script instead of `objcopy` to turn the elf into a flat binary */

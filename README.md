@@ -6,4 +6,5 @@ The operating systems are sorted by branch in the format of `(bios/uefi)/program
 
 ---
 
-This branch is for a few bare bones BIOS examples written in NASM.
+This branch is for an example of a BIOS os in Rust with no external binaries (other than QEMU) or libraries.
+Note that the kernel is always built in release mode.

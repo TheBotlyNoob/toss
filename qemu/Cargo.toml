@@ -11,4 +11,3 @@ ovmf-prebuilt = "0.1.0-alpha.1"
 
 [build-dependencies]
 llvm-tools = "0.1"
-kernel = { path = "../boot", artifact = "bin", target = "x86_64-unknown-none" }

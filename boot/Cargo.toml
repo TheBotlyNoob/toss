@@ -1,10 +1,10 @@
 cargo-features = ["per-package-target"]
 
 [package]
-name = "kernel"
+name = "boot"
 version = "0.1.0"
 edition = "2021"
-forced-target = "x86_64-unknown-none"
+default-target = "x86_64-unknown-none"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

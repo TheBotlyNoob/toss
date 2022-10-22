@@ -3,7 +3,7 @@
 version = 3
 
 [[package]]
-name = "kernel"
+name = "boot"
 version = "0.1.0"
 
 [[package]]
@@ -22,7 +22,6 @@ checksum = "fa50141d081512ab30fd9e7e7692476866df5098b028536ad6680212e717fa8d"
 name = "qemu"
 version = "0.1.0"
 dependencies = [
- "kernel",
  "llvm-tools",
  "ovmf-prebuilt",
 ]

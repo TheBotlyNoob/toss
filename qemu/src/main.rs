@@ -12,27 +12,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     cmd.args(["-boot", "order=c"]);
 
-    // Use a modern machine.
-    cmd.args(["-machine", "q35"]);
     cmd.args(["-smp", "4"]);
     // Allocate some memory.
     cmd.args(["-m", "256M"]);
     // Map the QEMU exit signal to port f4.
     cmd.args(["-device", "isa-debug-exit,iobase=0xf4,iosize=0x04"]);
     cmd.args(["-vga", "std"]);
-    cmd.args([
-        "-accel",
-        if cfg!(target_os = "windows") {
-            "tcg"
-        } else {
-            "kvm"
-        },
-    ]);
+    cmd.args(["-accel", "tcg"]);
     cmd.args(["-serial", "stdio"]);
     cmd.arg("-drive").arg(format!(
         "format=raw,index=0,media=disk,file={}",
         env!("KERNEL_BINARY_PATH")
     ));
+
+    println!("{cmd:#?}");
 
     cmd.spawn()?.wait()?;
 
