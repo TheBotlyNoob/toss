@@ -23,7 +23,7 @@ fn main() {
     cmd.arg("--release");
     cmd.arg("--manifest-path")
         .arg(workspace_dir.join("boot").join("Cargo.toml"));
-    cmd.arg("-Zbuild-std=core,alloc")
+    cmd.arg("-Zbuild-std=core,panic_abort")
         .arg("-Zbuild-std-features=compiler-builtins-mem");
 
     cmd.env_remove("RUSTFLAGS");

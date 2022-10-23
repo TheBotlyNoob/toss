@@ -1,9 +1,6 @@
 [workspace]
 members = ["boot", "qemu"]
 
-[profile.dev]
-panic = "abort"
-
 [profile.release]
 panic = "abort"
 codegen-units = 1

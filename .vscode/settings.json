@@ -1,7 +1,7 @@
 {
     "rust-analyzer.checkOnSave.allTargets": false,
     "rust-analyzer.checkOnSave.extraArgs": [
-        "-Zbuild-std=core,alloc",
+        "-Zbuild-std=core,panic_abort",
         "-Zbuild-std-features=compiler-builtins-mem",
         "--target=boot-sector.json"
     ]
