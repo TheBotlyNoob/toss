@@ -20,7 +20,7 @@ fn main() {
     cmd.arg("build");
     cmd.arg("--target")
         .arg(workspace_dir.join("boot-sector.json"));
-    cmd.arg("--release");
+    cmd.arg("--release"); // We need to have the smallest binary possible
     cmd.arg("--manifest-path")
         .arg(workspace_dir.join("boot").join("Cargo.toml"));
     cmd.arg("-Zbuild-std=core,panic_abort")
@@ -30,7 +30,7 @@ fn main() {
     cmd.env_remove("CARGO_ENCODED_RUSTFLAGS");
     cmd.env_remove("RUSTC_WORKSPACE_WRAPPER"); // used by clippy
 
-    println!("{:?}\n{}", cmd, out_dir.display());
+    println!("{:#?}\n{}", cmd, out_dir.display());
 
     assert!(cmd.status().unwrap().success());
 
@@ -45,7 +45,7 @@ fn main() {
     let llvm_tools = llvm_tools::LlvmTools::new().expect("failed to get llvm tools");
     let objcopy = llvm_tools
         .tool(&llvm_tools::exe("llvm-objcopy"))
-        .expect("LlvmObjcopyNotFound");
+        .expect("LLVM objcopy not found");
 
     // convert first stage to binary
     let mut cmd = Command::new(objcopy);

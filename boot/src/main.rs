@@ -1,9 +1,26 @@
 #![no_std]
 #![no_main]
 
+#[no_mangle]
+static mut DISK_NUM: u8 = 0;
+
 use core::{arch::asm, hint::unreachable_unchecked};
 
-#[inline(always)]
+fn print_num(mut num: u32) {
+    let mut buf = [0; 10];
+    for c in buf.iter_mut().rev() {
+        *c = (num % 10) as u8 + b'0';
+
+        num /= 10;
+        if num == 0 {
+            break;
+        }
+    }
+    for c in buf.iter().filter(|c| **c != 0) {
+        print_char(*c as char);
+    }
+}
+
 fn print_char(c: char) {
     unsafe {
         asm!("int 0x10", in("al") c as u8, in("ah") 0x00e_u8, options(nostack));
@@ -20,17 +37,15 @@ fn get_char() -> char {
 
 #[no_mangle]
 extern "C" fn _start() -> ! {
+    unsafe {
+        asm!("mov {}, dl", out(reg_byte) DISK_NUM, options(nostack));
+    }
+
+    print_num(u32::MAX);
+
     loop {
-        let c = get_char();
-        if c == '\r' {
-            print_char('\r');
-            print_char('\n');
-        } else if c == '\x08' {
-            print_char('\x08');
-            print_char(' ');
-            print_char('\x08');
-        } else {
-            print_char(c);
+        unsafe {
+            asm!("hlt", options(nostack));
         }
     }
 }
