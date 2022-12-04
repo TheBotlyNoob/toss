@@ -35,4 +35,18 @@ SECTIONS {
     {
         SHORT(0xaa55)       /* magic number for bootable disk */
     }
+
+    _end_first_stage = .;
+
+    .after :
+    {
+        KEEP(*(.after .after.*))
+    }
+
+    . = _end_first_stage + 512;
+
+    .magic_number :
+    {
+        SHORT(0xaa55)       /* end second sector */
+    }
 }

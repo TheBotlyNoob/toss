@@ -1,12 +1,10 @@
 use std::process::{Command, Stdio};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    println!("Kernel file: {}", env!("KERNEL_BINARY_PATH"));
+    println!("{}", env!("KERNEL_BINARY_PATH"));
 
     let mut cmd = Command::new("qemu-system-x86_64");
-    cmd.stdout(Stdio::inherit())
-        .stderr(Stdio::inherit())
-        .stdout(Stdio::inherit());
+    cmd.stdout(Stdio::null()).stderr(Stdio::null());
 
     cmd.arg("-nodefaults");
 
@@ -24,10 +22,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "format=raw,index=0,media=disk,file={}",
         env!("KERNEL_BINARY_PATH")
     ));
+    // debugging
+    cmd.args(["-s", "-S"]);
 
-    println!("{cmd:#?}");
-
-    cmd.spawn()?.wait()?;
+    cmd.spawn()?;
 
     Ok(())
 }

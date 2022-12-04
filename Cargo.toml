@@ -6,7 +6,8 @@ panic = "abort"
 codegen-units = 1
 lto = true
 opt-level = 3
-strip = true
+# strip = "symbols"
 
 [profile.release.package.boot]
 opt-level = "z" # Since we're limited to 510 bytes, we need to be as small as possible
+debug = true
