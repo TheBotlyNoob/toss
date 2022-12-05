@@ -3,6 +3,12 @@ use std::process::{Command, Stdio};
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("{}", env!("KERNEL_BINARY_PATH"));
 
+    std::fs::create_dir_all("target/boot-sector/release")?;
+    std::fs::copy(
+        env!("KERNEL_BINARY_PATH").strip_suffix(".bin").unwrap(),
+        "target/boot-sector/release/boot",
+    )?;
+
     let mut cmd = Command::new("qemu-system-x86_64");
     cmd.stdin(Stdio::null())
         .stdout(Stdio::null())
@@ -26,11 +32,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     ));
     // debugging
     cmd.args(["-s", "-S"]);
-    std::fs::create_dir_all("target/boot-sector/release")?;
-    std::fs::copy(
-        env!("KERNEL_BINARY_PATH").strip_suffix(".bin").unwrap(),
-        "target/boot-sector/release/boot",
-    )?;
+
+    #[cfg(target_os = "windows")]
+    {
+        use std::os::windows::process::CommandExt;
+        const DETACHED_PROCESS: u32 = 0x00000008;
+        cmd.creation_flags(DETACHED_PROCESS); // CREATE_NO_WINDOW
+    }
 
     cmd.spawn()?;
 
