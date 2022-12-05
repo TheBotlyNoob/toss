@@ -29,7 +29,7 @@ SECTIONS {
         *(.got .got.*)
     }
 
-    . = 0x7c00 + 510;
+    . = _stack_end + 510;
 
     .magic_number :
     {
@@ -43,10 +43,9 @@ SECTIONS {
         KEEP(*(.after .after.*))
     }
 
-    . = _end_first_stage + 512;
-
-    .magic_number :
+    . = _end_first_stage + 510;
+    .end :
     {
-        SHORT(0xaa55)       /* end second sector */
+        SHORT(0x0000)        /* end of disk */
     }
 }

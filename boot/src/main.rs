@@ -1,10 +1,12 @@
 #![no_std]
 #![no_main]
+#![feature(asm_const)]
 
 use core::{arch::asm, hint::unreachable_unchecked};
 
 extern "C" {
     static _stack_end: usize;
+    static _stack_start: usize;
 }
 
 macro_rules! entry {
@@ -20,13 +22,14 @@ macro_rules! entry {
 entry!(main);
 
 fn main() -> ! {
-    setup_stack();
-    print_char('J');
-
     let disk: u8;
     unsafe {
         asm!("mov dl, {}", out(reg_byte) disk);
     }
+
+    setup_stack();
+    print_char('J');
+
     let ptr = read_disk(disk);
     print_char('K');
     print_char(unsafe { *ptr.add(1) as char });
@@ -48,18 +51,18 @@ fn setup_stack() {
             "xor ax, ax",
             "mov es, ax",
             "mov ds, ax",
-            "mov sp, {:x}",
+            "mov sp, {stack_start}",
             "mov bp, sp",
-            "mov bx, {:x}",
-            in(reg) 0x7c00_u16,
-            in(reg) 0x7e00_u16,
+            "mov bx, {stack_end}",
+            stack_start = sym _stack_end,
+            stack_end = sym _stack_start,
             options(nostack)
         );
     }
 }
 
 fn read_disk(disk: u8) -> *mut u8 {
-    let ptr: *mut u8;
+    let ptr: usize;
     unsafe {
         asm!(
             "int 0x13",
@@ -72,7 +75,7 @@ fn read_disk(disk: u8) -> *mut u8 {
             out("bx") ptr,
         );
     }
-    ptr
+    ptr as *mut u8
 }
 
 #[panic_handler]
