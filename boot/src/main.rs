@@ -1,6 +1,5 @@
 #![no_std]
 #![no_main]
-#![feature(asm_const)]
 
 use core::{arch::asm, hint::unreachable_unchecked};
 
