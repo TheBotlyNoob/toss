@@ -26,7 +26,6 @@ fn main() -> ! {
         asm!("mov dl, {}", out(reg_byte) disk);
     }
 
-    setup_stack();
     print_char('J');
 
     let ptr = read_disk(disk);
@@ -43,23 +42,6 @@ fn print_char(c: char) {
         asm!("int 0x10", in("al") c as u8, in("ah") 0x00e_u8, options(nostack));
     }
 }
-
-fn setup_stack() {
-    unsafe {
-        asm!(
-            "xor ax, ax",
-            "mov es, ax",
-            "mov ds, ax",
-            "mov sp, {stack_start}",
-            "mov bp, sp",
-            "mov bx, {stack_end}",
-            stack_start = sym _stack_end,
-            stack_end = sym _stack_start,
-            options(nostack)
-        );
-    }
-}
-
 fn read_disk(disk: u8) -> *mut u8 {
     let ptr: usize;
     unsafe {
