@@ -8,6 +8,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         env!("KERNEL_BINARY_PATH").strip_suffix(".bin").unwrap(),
         "target/boot-sector/release/boot",
     )?;
+    std::fs::copy(
+        env!("KERNEL_BINARY_PATH"),
+        "target/boot-sector/release/boot.bin",
+    )?;
 
     let mut cmd = Command::new("qemu-system-x86_64");
     cmd.stdin(Stdio::null())
@@ -37,7 +41,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     {
         use std::os::windows::process::CommandExt;
         const DETACHED_PROCESS: u32 = 0x00000008;
-        cmd.creation_flags(DETACHED_PROCESS); // CREATE_NO_WINDOW
+        cmd.creation_flags(DETACHED_PROCESS);
     }
 
     cmd.spawn()?;

@@ -1,69 +1,100 @@
 #![no_std]
 #![no_main]
 
-use core::{arch::asm, hint::unreachable_unchecked};
+mod disk;
 
-extern "C" {
-    static _stack_end: usize;
-    static _stack_start: usize;
-}
+use core::arch::asm;
 
 macro_rules! entry {
     ($fn:expr) => {
         #[no_mangle]
         pub extern "C" fn _start() -> ! {
-            let f: fn() -> ! = $fn;
-            f()
+            let disk: u8;
+            unsafe {
+                asm!("", out("dl") disk);
+            }
+
+            unsafe {
+                asm!("cli", options(nostack)); // disable interrupts
+
+                asm!(
+                    "mov ds, {0:x}",
+                    "mov es, {0:x}",
+                    "mov ss, {0:x}",
+                    "mov sp, {1:x}",
+                    "mov bp, {1:x}",
+                    in(reg) 0x00_u16,
+                    in(reg) 0x7C00,
+                ); // set up segments
+
+                asm!("sti", options(nostack)); // enable interrupts
+            }
+
+            let f: fn(u8) -> ! = $fn;
+            f(disk)
         }
     };
 }
 
 entry!(main);
 
-fn main() -> ! {
-    let disk: u8;
-    unsafe {
-        asm!("mov dl, {}", out(reg_byte) disk);
-    }
+fn main(disk: u8) -> ! {
+    // unsafe {
+    //     asm!(
+    //         "int 0x10",
+    //         in("ax") 0x0003, // AH=0x00, AL=0x03
+    //     ); // clear screen
+    // }
+    // print_char('C');
 
-    print_char('J');
+    print_num(disk.into());
 
-    let ptr = read_disk(disk);
-    print_char('K');
-    print_char(unsafe { *ptr.add(1) as char });
+    // let (heads, sectors) = disk::get_disk_info(disk);
 
-    unsafe {
-        asm!("hlt", options(nostack, noreturn));
-    }
+    hlt()
 }
 
 fn print_char(c: char) {
     unsafe {
-        asm!("int 0x10", in("al") c as u8, in("ah") 0x00e_u8, options(nostack));
-    }
-}
-fn read_disk(disk: u8) -> *mut u8 {
-    let ptr: usize;
-    unsafe {
         asm!(
-            "int 0x13",
-            in("ah") 0x02_u8,
-            in("al") 0x01_u8,
-            in("ch") 0x00_u8,
-            in("dh") 0x00_u8,
-            in("cl") 0x02_u8,
-            in("dl") disk,
-            out("bx") ptr,
+            "int 0x10",
+            in("al") c as u8,
+            in("ah") 0x00e_u8,
+            options(nostack)
         );
     }
-    ptr as *mut u8
+}
+
+fn print_num(mut n: u16) {
+    // if n == 0 {
+    //     print_char('0');
+    //     return;
+    // }
+
+    let mut buf = [0; 5];
+    let mut i = buf.len();
+    while n > 0 {
+        i -= 1;
+        buf[i] = (n % 10) as u8 + b'0';
+        n /= 10;
+    }
+    for c in &buf[i..] {
+        print_char(*c as _);
+    }
 }
 
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
-    unsafe { unreachable_unchecked() }
+    print_char('P');
+    unsafe {
+        // emit a breakpoint exception
+        asm!("int 0x03", options(nostack, noreturn));
+    }
 }
 
-#[link_section = ".after"]
-#[no_mangle]
-pub static HELLO: [u8; 12] = *b"Hello, world";
+#[inline]
+fn hlt() -> ! {
+    unsafe {
+        asm!("hlt", options(nostack, noreturn));
+    }
+}

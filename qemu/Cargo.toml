@@ -11,3 +11,4 @@ ovmf-prebuilt = "0.1.0-alpha.1"
 
 [build-dependencies]
 llvm-tools = "0.1"
+sysinfo = "0.28"

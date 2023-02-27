@@ -1,6 +1,16 @@
 use std::{env::var, path::Path, process::Command};
+use sysinfo::{ProcessExt, ProcessRefreshKind, RefreshKind, System, SystemExt};
 
 fn main() {
+    // kill qemu
+    for p in
+        System::new_with_specifics(RefreshKind::new().with_processes(ProcessRefreshKind::new()))
+            .processes_by_name("qemu-system-x86_64")
+    {
+        println!("killing {}", p.pid());
+        p.kill();
+    }
+
     let workspace_dir = var("CARGO_MANIFEST_DIR").unwrap();
     let workspace_dir = Path::new(&workspace_dir).parent().unwrap();
 

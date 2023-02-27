@@ -35,17 +35,4 @@ SECTIONS {
     {
         SHORT(0xaa55)       /* magic number for bootable disk */
     }
-
-    _end_first_stage = .;
-
-    .after :
-    {
-        KEEP(*(.after .after.*))
-    }
-
-    . = _end_first_stage + 510;
-    .end :
-    {
-        SHORT(0x0000)        /* end of disk */
-    }
 }

@@ -2,12 +2,7 @@
 members = ["boot", "qemu"]
 
 [profile.release]
-panic = "abort"
-codegen-units = 1
 lto = true
+codegen-units = 1
+strip = true
 opt-level = 3
-# strip = "symbols"
-
-[profile.release.package.boot]
-opt-level = "z" # Since we're limited to 510 bytes, we need to be as small as possible
-debug = true
