@@ -1,6 +1,9 @@
 [workspace]
 members = ["boot", "qemu"]
 
+[profile.release.package.boot]
+opt-level = "z"
+
 [profile.release]
 lto = true
 codegen-units = 1
